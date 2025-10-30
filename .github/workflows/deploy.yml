@@ -8,7 +8,7 @@ permissions:
   packages: write # needed to push to GHCR
 
 env:
-  ORG: quantixcore # must be lowercase
+  ORG: tenomic # must be lowercase
   IMAGE_NAME: playwright-pnpm-runner
   REGISTRY: ghcr.io
 
