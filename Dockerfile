@@ -2,11 +2,17 @@ FROM mcr.microsoft.com/playwright:v1.55.0-noble
 
 ARG NODE_VERSION="20.19.4"
 ARG PNPM_VERSION="latest"
+ARG JDK_VERSION="21"
 
 USER root
 
+# Add Infisical APT repository
+RUN curl -1sLf \
+'https://artifacts-cli.infisical.com/setup.deb.sh' \
+| bash
+
 # Install required packages
-RUN apt-get update && apt-get install -y curl wget gnupg ca-certificates xz-utils
+RUN apt-get update && apt-get install -y curl wget gnupg ca-certificates xz-utils openjdk-${JDK_VERSION}-jdk infisical
 
 # Install Node.js
 RUN wget --https-only "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" -O /tmp/node.tar.xz && \
