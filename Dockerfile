@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/playwright:v1.55.0-noble
 
-ARG NODE_VERSION="20.19.4"
+ARG NODE_VERSION="24.11.1"
 ARG PNPM_VERSION="latest"
 ARG JDK_VERSION="21"
 
