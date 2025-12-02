@@ -14,6 +14,10 @@ RUN curl -1sLf \
 # Install required packages
 RUN apt-get update && apt-get install -y curl wget gnupg ca-certificates xz-utils openjdk-${JDK_VERSION}-jdk infisical
 
+# Required by keycloakify to build theme jar
+# https://docs.keycloakify.dev/testing-your-theme/inside-of-keycloak#ubuntu-debian
+RUN apt-get install -y maven
+
 # Install Node.js
 RUN wget --https-only "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" -O /tmp/node.tar.xz && \
     tar -C /usr/local -xf /tmp/node.tar.xz --strip-components=1 --exclude="CHANGELOG.md" --exclude="LICENSE" --exclude="README.md" && \
