@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/playwright:v1.57.0-noble
 
 ARG NODE_VERSION="24.12.0"
 ARG PNPM_VERSION="latest"
-ARG JDK_VERSION="21"
+ARG JAVA_VERSION="25"
 
 USER root
 
@@ -12,7 +12,17 @@ RUN curl -1sLf \
 | bash
 
 # Install required packages
-RUN apt-get update && apt-get install -y curl wget gnupg ca-certificates xz-utils openjdk-${JDK_VERSION}-jdk infisical
+RUN apt-get update && apt-get install -y curl wget gnupg ca-certificates xz-utils infisical
+
+# Install GraalVM
+RUN wget https://download.oracle.com/graalvm/${JAVA_VERSION}/latest/graalvm-jdk-${JAVA_VERSION}_linux-x64_bin.tar.gz -O /tmp/graalvm.tar.gz && \
+    mkdir -p /opt/graalvm && \
+    tar -xzf /tmp/graalvm.tar.gz -C /opt/graalvm --strip-components=1 && \
+    rm /tmp/graalvm.tar.gz
+
+ENV GRAALVM_HOME=/opt/graalvm
+ENV JAVA_HOME=/opt/graalvm
+ENV PATH="$JAVA_HOME/bin:${PATH}"
 
 # Required by keycloakify to build theme jar
 # https://docs.keycloakify.dev/testing-your-theme/inside-of-keycloak#ubuntu-debian
