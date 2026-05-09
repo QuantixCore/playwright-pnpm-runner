@@ -1,6 +1,6 @@
-FROM mcr.microsoft.com/playwright:v1.57.0-noble
+FROM mcr.microsoft.com/playwright:v1.59.1-noble
 
-ARG NODE_VERSION="24.12.0"
+ARG NODE_VERSION="24.15.0"
 ARG PNPM_VERSION="latest"
 ARG JAVA_VERSION="25"
 
@@ -23,10 +23,6 @@ RUN wget https://download.oracle.com/graalvm/${JAVA_VERSION}/latest/graalvm-jdk-
 ENV GRAALVM_HOME=/opt/graalvm
 ENV JAVA_HOME=/opt/graalvm
 ENV PATH="$JAVA_HOME/bin:${PATH}"
-
-# Required by keycloakify to build theme jar
-# https://docs.keycloakify.dev/testing-your-theme/inside-of-keycloak#ubuntu-debian
-RUN apt-get install -y maven
 
 # Install Node.js
 RUN wget --https-only "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" -O /tmp/node.tar.xz && \
