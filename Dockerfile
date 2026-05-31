@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:v1.59.1-noble
+FROM mcr.microsoft.com/playwright:v1.60.0-noble
 
 ARG NODE_VERSION="24.15.0"
 ARG PNPM_VERSION="latest"
