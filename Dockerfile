@@ -5,11 +5,6 @@ ARG PNPM_VERSION="11"
 
 USER root
 
-# Add Infisical APT repository
-RUN curl -1sLf \
-'https://artifacts-cli.infisical.com/setup.deb.sh' \
-| bash
-
 # Install required packages
 RUN apt-get update && apt-get install -y curl wget gnupg ca-certificates xz-utils
 
@@ -24,9 +19,16 @@ RUN npm install -g --no-update-notifier corepack@latest \
     && corepack install --global pnpm@${PNPM_VERSION} \
     && echo "pnpm version $(pnpm --version)"
 
-# Rename pwuser > runner, and rename its home directory
-RUN usermod -l runner pwuser && \
-    usermod -d /home/runner -m runner
+# matches our gh runner uid/gid
+ARG RUNNER_UID=2001
+ARG RUNNER_GID=2001
+
+RUN set -eux; \
+    usermod -l runner pwuser; \
+    usermod -d /home/runner -m runner; \
+    groupmod -g "${RUNNER_GID}" pwuser; \
+    usermod  -u "${RUNNER_UID}" runner; \
+    chown -R "${RUNNER_UID}:${RUNNER_GID}" /home/runner
 
 USER runner
 WORKDIR /home/runner
