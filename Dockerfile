@@ -1,22 +1,15 @@
+# Must match "@playwright/test" in invo's pnpm-workspace.yaml catalog
 FROM mcr.microsoft.com/playwright:v1.61.1-noble
 
-ARG NODE_VERSION="24.18.0"
-ARG PNPM_VERSION="11"
+ARG PNPM_VERSION="12"
 
 USER root
 
-# Install required packages
-RUN apt-get update && apt-get install -y curl wget gnupg ca-certificates xz-utils
-
-# Install Node.js
-RUN wget --https-only "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" -O /tmp/node.tar.xz && \
-    tar -C /usr/local -xf /tmp/node.tar.xz --strip-components=1 --exclude="CHANGELOG.md" --exclude="LICENSE" --exclude="README.md" && \
-    rm /tmp/node.tar.xz
-
-ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-RUN npm install -g --no-update-notifier corepack@latest \
-    && corepack enable \
-    && corepack install --global pnpm@${PNPM_VERSION} \
+ENV PNPM_HOME="/usr/local/pnpm"
+ENV PATH="$PNPM_HOME/bin:$PATH"
+RUN curl -fsSL https://get.pnpm.io/install.sh | \
+    env PNPM_VERSION="${PNPM_VERSION}" SHELL=/bin/bash ENV=/root/.bashrc bash - \
+    && chmod -R a+rX "$PNPM_HOME" \
     && echo "pnpm version $(pnpm --version)"
 
 # matches our gh runner uid/gid
